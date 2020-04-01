@@ -29,6 +29,9 @@ function loadAssets(callback){
     Sprites.raketa = loadIMG("Obrazky/", "raketa2.png");
     Sprites.brick = loadIMG("Obrazky/", "Wall_brick.png");
     Sprites.vybuch = loadIMG("Obrazky/", "vybuch.png");
+    Sprites.menu = loadIMG("Obrazky/", "Menu_pozadie.png");
+    Sprites.soundON = loadIMG("Obrazky/", "Sound_icon.png");
+    Sprites.soundOFF = loadIMG("Obrazky/", "Sound_iconOFF.png");
 
 
     AssetsLoading_loop(callback);
