@@ -6,10 +6,14 @@ class Gameworld{
         this.vybuch = new Explosion();
         this.gameBar = new GameBar({x:0, y : 10*64}, {x : 1216, y : 100 }, "rgb(224, 224, 184)");    
         this.healthBar = new HealthBar({x:500, y : 10*64 + 10 }, {x : 200, y : 40 }, "red");
+        //this.buttonSound = new Sound({x: 1100, y: 620},{x: 64, y: 64});
+
         
         this.time = Date.now();
         this.dt = 0;
         this.keyInput = [];
+       // this.mouseX = -1;
+        //this.mouseY = -1;
     
 
     }
@@ -17,75 +21,31 @@ class Gameworld{
     input(){
         document.addEventListener('keydown', (event)=> {
             event.preventDefault();
-            if(event.keyCode == 37) {
-                this.keyInput[37] = 1;
-            }
-            if(event.keyCode == 39) {
-                this.keyInput[39] = 1;
-            } 
-            if(event.keyCode == 38){
-                this.keyInput[38] = 1;
-            }
-            if(event.keyCode == 40){
-                this.keyInput[40] = 1;
-            } 
-            if(event.keyCode == 65){
-                this.keyInput[65] = 1;
-            }
-            if(event.keyCode == 68){
-                this.keyInput[68] = 1;
-            }
-            if(event.keyCode == 87){
-                this.keyInput[87] = 1;
-            }
-            if(event.keyCode == 83){
-                this.keyInput[83] = 1;
-            }
-            
+            if(event.keyCode != 81 && event.keyCode !=77) 
+                this.keyInput[event.keyCode] = 1;
         });
-
-        
 
         document.addEventListener('keyup', (event)=> {
-            if(event.keyCode == 37) {
-                this.keyInput[37] = 0;
-            }
-            if(event.keyCode == 39) {
-                this.keyInput[39] = 0;
-            } 
-            if(event.keyCode == 38){
-                this.keyInput[38] = 0;
-            }
-            if(event.keyCode == 40){
-                this.keyInput[40] = 0;
-            } 
-            if(event.keyCode == 77){
-                this.keyInput[77] = 1;
-            }
-            if(event.keyCode == 65){
-                this.keyInput[65] = 0;
-            }
-            if(event.keyCode == 68){
-                this.keyInput[68] = 0;
-            }
-            if(event.keyCode == 87){
-                this.keyInput[87] = 0;
-            }
-            if(event.keyCode == 83){
-                this.keyInput[83] = 0;
-            }
-            if(event.keyCode == 81){
+            if(event.keyCode == 81)
                 this.keyInput[81] = 1;
-            }
+            if(event.keyCode == 77)
+                    this.keyInput[77] = 1;
+            else if(event.keyCode != 81)  this.keyInput[event.keyCode] = 0;
         });
+        // document.addEventListener("click",(e)=>{
+        //     this.mouseX = e.clientX;
+        //     this.mouseY = e.clientY; 
+        // })
+    }
+           
 
-    } 
-
+                
     update(){
         this.dt = ( Date.now()- this.time ) / 100;
         this.time = Date.now();
 
         this.input();
+        //this.buttonSound.update(this.mouseX, this.mouseY);
         this.tank.update(this.keyInput, this.dt);     
         this.tank2.update(this.keyInput, this.dt);
         this.CollisionCheck_Shot(this.tank.strely, this.tank2);
@@ -94,11 +54,13 @@ class Gameworld{
         if(this.CollisionCheck_Tank(this.tank) == 0 ){
             this.tank.position.x = this.tank.positionOld.x;
             this.tank.position.y = this.tank.positionOld.y;
-
+            
             this.tank.rotation = this.tank.rotationOld;
         }
         this.Death(this.tank);
         this.Death(this.tank2);
+        this.mouseX = -1;
+        this.mouseY = -1;
     }
     
     draw(){
@@ -110,6 +72,7 @@ class Gameworld{
         this.tank2.draw();
         this.gameBar.drawBar();
         this.healthBar.drawBar(this.tank.life);
+       // this.buttonSound.draw();
 
         if(this.vybuch.counter > 0){
             this.vybuch.drawExplosion(this.vybuch.position, Math.floor(this.vybuch.counter / 3)*0.25);

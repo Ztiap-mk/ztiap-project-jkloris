@@ -5,6 +5,7 @@ class Game{
     init(){
         this.game_world = new Gameworld();
         this.menu = new Menu();
+        this.instrukcie = new Instrukcie();
     }
     
     start(){
@@ -24,9 +25,12 @@ class Game{
         }else if(flag == 1){
             TankTrouble.menu.update();
             TankTrouble.menu.draw();
+        }else if(flag == 2){
+            TankTrouble.instrukcie.update();
+            TankTrouble.instrukcie.draw();
         }
         
-        requestAnimationFrame(TankTrouble.mainLoop);
+        requestAnimationFrame(()=>TankTrouble.mainLoop()); //spýtať sa aký je rozdiel ked tam nieje lambda func
     }
 }
 

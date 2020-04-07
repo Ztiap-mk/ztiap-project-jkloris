@@ -1,12 +1,12 @@
 class Menu{
-    constructor(counter){
+    constructor(){
         this.button1 = new Button({x: 408, y: 200}, {x: 400, y: 80}, "Multiplayer","white","black");
         this.button1.action = function(){
         flag = 0;
         }
         this.button2 = new Button({x: 408, y: 350},{x: 400, y: 80}, "Inštrukcie","white","black" );
         this.button2.action = function(){
-
+        flag = 2
         }
         this.buttonSound = new Sound({x: 1100, y: 620},{x: 64, y: 64});
         this.mouseX = -1;

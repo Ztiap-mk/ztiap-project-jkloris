@@ -32,6 +32,7 @@ function loadAssets(callback){
     Sprites.menu = loadIMG("Obrazky/", "Menu_pozadie.png");
     Sprites.soundON = loadIMG("Obrazky/", "Sound_icon.png");
     Sprites.soundOFF = loadIMG("Obrazky/", "Sound_iconOFF.png");
+    Sprites.instrukcie = loadIMG("Obrazky/", "Instrukcie.png");
 
 
     AssetsLoading_loop(callback);

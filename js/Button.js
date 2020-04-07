@@ -22,12 +22,13 @@ class Button{
     
     draw(){        
         var a = this.size.y / 2 + 16;
-        var b = this.size.x / 2 - this.name.length*8;
+        var b = this.size.x/2;
         Canvas.context.save();
         Canvas.context.fillStyle = this.Bcolor;
         Canvas.context.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
         Canvas.context.fillStyle = this.Fcolor;
         Canvas.context.font = "40px Arial";
+        Canvas.context.textAlign = "center";
         Canvas.context.fillText(this.name, this.position.x + b, this.position.y+a);
         Canvas.context.restore();
     }
