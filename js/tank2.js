@@ -1,7 +1,7 @@
 class Tank2 extends Tank{
     constructor(position, rotation, origin){
         super(position, rotation, origin);
-        this.life = 2;
+        this.life = 10;
 
     }
 
@@ -9,6 +9,7 @@ class Tank2 extends Tank{
         Canvas.context.save();
         Canvas.context.translate(this.position.x, this.position.y); //zachovaj poradie!!
         Canvas.context.rotate(Math.floor(this.rotation)  *Math.PI/180);
+        Canvas.context.fillRect(-this.origin.x , -this.origin.y, Sprites.tankIMG.width, Sprites.tankIMG.height );// hitbox 
         Canvas.context.drawImage(Sprites.tank2IMG, -this.origin.x , -this.origin.y ); 
         Canvas.context.restore();
         

@@ -1,29 +1,22 @@
 class Instrukcie{
-    constructor(){
+    constructor(eventHandler){
         this.buttonMenu = new Button({x: 50, y: 620},{x: 150, y: 60}, "Menu", "white", "black");
         this.buttonMenu.action = function(){
-            flag = 1;
+            flag = 0;
         }
         this.buttonSound = new Sound({x: 1100, y: 620},{x: 64, y: 64});
-        this.mouseX = -1;
-        this.mouseY = -1;
+        this.eventHandler = eventHandler;
     }
 
-
-    mousePos(){
-        document.addEventListener("click",(e)=>{
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-        })
+    init(){
         
     }
-    
+
     update(){
-        this.mousePos();
-        this.buttonSound.update(this.mouseX, this.mouseY);
-        this.buttonMenu.update(this.mouseX, this.mouseY);
-        this.mouseY = -1;
-        this.mouseX = -1;
+        this.buttonSound.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
+        this.buttonMenu.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
+        this.eventHandler.mouseY = -1;
+        this.eventHandler.mouseX = -1;
     }
 
     draw(){

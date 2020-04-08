@@ -1,36 +1,34 @@
 class Menu{
-    constructor(){
-        this.button1 = new Button({x: 408, y: 200}, {x: 400, y: 80}, "Multiplayer","white","black");
+    constructor(eventHandler){
+        this.button1 = new Button({x: 408, y: 200}, {x: 400, y: 80}, "Spustiť hru","white","black");
         this.button1.action = function(){
-        flag = 0;
+            flag = 1;
         }
         this.button2 = new Button({x: 408, y: 350},{x: 400, y: 80}, "Inštrukcie","white","black" );
         this.button2.action = function(){
-        flag = 2
+            flag = 2;
         }
         this.buttonSound = new Sound({x: 1100, y: 620},{x: 64, y: 64});
-        this.mouseX = -1;
-        this.mouseY = -1;
-    }
-
-
-    mousePos(){
-        document.addEventListener("click",(e)=>{
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-        })
+        this.eventHandler = eventHandler;
+        
         
     }
     
-    update(){
-        this.mousePos();
-        this.button1.update(this.mouseX, this.mouseY);
-        this.button2.update(this.mouseX, this.mouseY);
-        this.buttonSound.update(this.mouseX, this.mouseY);
-        this.mouseY = -1;
-        this.mouseX = -1;
+    init(){
+        
     }
-
+    
+    
+    
+    update(){
+        this.button1.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
+        this.button2.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
+        this.buttonSound.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
+        this.eventHandler.mouseY = -1;
+        this.eventHandler.mouseX = -1;
+        
+    }
+    
     draw(){
         this.drawBackground();
         this.button1.draw();

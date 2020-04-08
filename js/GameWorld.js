@@ -1,7 +1,7 @@
 class Gameworld{
-    constructor(){
+    constructor(eventHandler){
         this.tank = new Tank({x: 200, y: 200}, 0 , {x: 25, y: 50});
-        this.tank2 = new Tank2({x: 300, y: 200}, 0 , {x: 25, y: 62})
+        this.tank2 = new Tank2({x: 400, y: 200}, 0 , {x: 25, y: 50})
         this.mapa1 = new Mapa();
         this.vybuch = new Explosion();
         this.gameBar = new GameBar({x:0, y : 10*64}, {x : 1216, y : 100 }, "rgb(224, 224, 184)");    
@@ -11,32 +11,18 @@ class Gameworld{
         
         this.time = Date.now();
         this.dt = 0;
-        this.keyInput = [];
+        this.keyInput = eventHandler.keyInput;
        // this.mouseX = -1;
         //this.mouseY = -1;
     
 
     }
 
-    input(){
-        document.addEventListener('keydown', (event)=> {
-            event.preventDefault();
-            if(event.keyCode != 81 && event.keyCode !=77) 
-                this.keyInput[event.keyCode] = 1;
-        });
-
-        document.addEventListener('keyup', (event)=> {
-            if(event.keyCode == 81)
-                this.keyInput[81] = 1;
-            if(event.keyCode == 77)
-                    this.keyInput[77] = 1;
-            else if(event.keyCode != 81)  this.keyInput[event.keyCode] = 0;
-        });
-        // document.addEventListener("click",(e)=>{
-        //     this.mouseX = e.clientX;
-        //     this.mouseY = e.clientY; 
-        // })
+    init(){
+        //this.input_init()
+        //this.tank.reset();
     }
+
            
 
                 
@@ -44,7 +30,7 @@ class Gameworld{
         this.dt = ( Date.now()- this.time ) / 100;
         this.time = Date.now();
 
-        this.input();
+        //this.input();
         //this.buttonSound.update(this.mouseX, this.mouseY);
         this.tank.update(this.keyInput, this.dt);     
         this.tank2.update(this.keyInput, this.dt);
@@ -57,6 +43,7 @@ class Gameworld{
             
             this.tank.rotation = this.tank.rotationOld;
         }
+        
         this.Death(this.tank);
         this.Death(this.tank2);
         this.mouseX = -1;
@@ -152,6 +139,8 @@ class Gameworld{
         } else if(f == 1 && rt.y <= lb.y){
             if(rt.y<= raketa.y && lb.y >= raketa.y) return 1;    
         }
+        
+        return 0;
     }
 
     Death(tank){

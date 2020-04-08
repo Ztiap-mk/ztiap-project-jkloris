@@ -7,10 +7,10 @@ class Tank{
         this.pressedT = 0;
         this.speed = 30;
         this.speedR = 20;
-        this.life = 4;
+        this.life = 10;
         
         this.strely = [];
-        this.speedS = 10;
+        this.speedS = 8 ;
         this.maxS = 5;
 
         this.positionOld = {x : 0, y : 0};
