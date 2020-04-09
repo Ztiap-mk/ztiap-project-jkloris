@@ -9,12 +9,9 @@ class Gameworld{
         this.healthBar2 = new HealthBar({x:700, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P2 health");
         this.buttonSound = new Sound({x: 1100, y: 650},{x: 64, y: 64});
     
-        this.restartButton = new Button({x: 420, y: 330}, {x: 100, y: 50}, "Restart","white","black","20px Arial");
-        this.restartButton.action = function(){
-            console.log("BLA");
-            this.tank.reset({x :100, y :300});
-            this.tank2.reset({x :300, y :300});
-            this.paused = false;
+        this.menuButton = new Button({x: 420, y: 330}, {x: 360, y: 50}, "Návrat do menu","white","black","20px Arial");
+        this.menuButton.action = function(){
+            flag = 0;
         }
 
         
@@ -27,7 +24,7 @@ class Gameworld{
     }
 
     init(){
-        this.restartButton.action();
+
     }
 
            
@@ -61,11 +58,12 @@ class Gameworld{
 
             this.Death(this.tank);
             this.Death(this.tank2);
-            this.eventHandler.mouseX = -1;
-            this.eventHandler.mouseY = -1;
+        } else{
+            this.menuButton.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
         }
         this.pauseGame();
-        this.restartButton.update();
+        this.eventHandler.mouseY = -1;
+        this.eventHandler.mouseX = -1;
     }   
     
     draw(){
@@ -189,7 +187,7 @@ class Gameworld{
         Canvas.context.fillStyle = "rgba(256,256,256,0.7)";
         Canvas.context.font = "50px Arial";
         Canvas.context.fillText("Pauza", 530,300);
-        this.restartButton.draw();
+        this.menuButton.draw();
         Canvas.context.restore();
     }
 }
