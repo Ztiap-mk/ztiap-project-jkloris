@@ -1,6 +1,6 @@
 class Instrukcie{
     constructor(eventHandler){
-        this.buttonMenu = new Button({x: 50, y: 620},{x: 150, y: 60}, "Menu", "white", "black");
+        this.buttonMenu = new Button({x: 50, y: 620},{x: 150, y: 60}, "Menu", "white", "black","40px Arial");
         this.buttonMenu.action = function(){
             flag = 0;
         }

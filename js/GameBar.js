@@ -3,6 +3,7 @@ class GameBar{
         this.position = position;
         this.size = size;
         this.color = color;
+        
     }
 
     drawBar(){
@@ -12,21 +13,22 @@ class GameBar{
 }
 
 class HealthBar extends GameBar{
-    constructor(position, size, color){
+    constructor(position, size, color, text ){
         super(position, size, color);
+        this.text = text;
     
     }
 
-    drawBar(life){
+    drawBar(life, maxLife){
         Canvas.context.beginPath();
         Canvas.context.fillStyle = this.color;
         Canvas.context.strokeStyle = "black";
         Canvas.context.lineWidth = "5";
-        Canvas.context.fillRect(this.position.x, this. position.y, this.size.x / 4 * life, this.size.y);
+        Canvas.context.fillRect(this.position.x, this. position.y, this.size.x / maxLife * life, this.size.y);
         Canvas.context.rect(this.position.x, this. position.y, this.size.x, this.size.y);
         Canvas.context.stroke();
         Canvas.context.fillStyle = "black";
         Canvas.context.font = "20px Arial";
-        Canvas.context.fillText("Health",this.position.x + 70, this. position.y + 60 );
+        Canvas.context.fillText(this.text,this.position.x + 70, this. position.y + 60 );
     }
 }

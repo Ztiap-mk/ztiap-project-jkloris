@@ -41,16 +41,71 @@ class stateManager{
     input_init(){
         document.addEventListener('keydown', (event)=> {
             event.preventDefault();
-            if(event.keyCode != 81 && event.keyCode !=77) 
-                this.eventHandler.keyInput[event.keyCode] = 1;
+            if(event.keyCode == 37) {
+                this.eventHandler.keyInput[37] = 1;
+            }
+            if(event.keyCode == 39) {
+                this.eventHandler.keyInput[39] = 1;
+            } 
+            if(event.keyCode == 38){
+                this.eventHandler.keyInput[38] = 1;
+            }
+            if(event.keyCode == 40){
+                this.eventHandler.keyInput[40] = 1;
+            } 
+            if(event.keyCode == 65){
+                this.eventHandler.keyInput[65] = 1;
+            }
+            if(event.keyCode == 68){
+                this.eventHandler.keyInput[68] = 1;
+            }
+            if(event.keyCode == 87){
+                this.eventHandler.keyInput[87] = 1;
+            }
+            if(event.keyCode == 83){
+                this.eventHandler.keyInput[83] = 1;
+            }
+            
         });
 
+        
+
         document.addEventListener('keyup', (event)=> {
-            if(event.keyCode == 81)
+            if(event.keyCode == 37) {
+                this.eventHandler.keyInput[37] = 0;
+            }
+            if(event.keyCode == 39) {
+                this.eventHandler.keyInput[39] = 0;
+            } 
+            if(event.keyCode == 38){
+                this.eventHandler.keyInput[38] = 0;
+            }
+            if(event.keyCode == 40){
+                this.eventHandler.keyInput[40] = 0;
+            } 
+            if(event.keyCode == 77){
+                this.eventHandler.keyInput[77] = 1;
+            }
+            if(event.keyCode == 65){
+                this.eventHandler.keyInput[65] = 0;
+            }
+            if(event.keyCode == 68){
+                this.eventHandler.keyInput[68] = 0;
+            }
+            if(event.keyCode == 87){
+                this.eventHandler.keyInput[87] = 0;
+            }
+            if(event.keyCode == 83){
+                this.eventHandler.keyInput[83] = 0;
+            }
+            if(event.keyCode == 81){
                 this.eventHandler.keyInput[81] = 1;
-            if(event.keyCode == 77)
-                    this.eventHandler.keyInput[77] = 1;
-            else if(event.keyCode != 81)  this.eventHandler.keyInput[event.keyCode] = 0;
+            }
+            if(event.keyCode == 80 && this.eventHandler.keyInput[80] != 1){
+                this.eventHandler.keyInput[80] =1;
+            } else if(event.keyCode == 80 && this.eventHandler.keyInput[80] == 1){
+                this.eventHandler.keyInput[80] = 0;
+            }
         });
         
         document.addEventListener("click",(e)=>{

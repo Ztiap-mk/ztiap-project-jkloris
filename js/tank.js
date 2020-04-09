@@ -3,11 +3,12 @@ class Tank{
         this.position = position;
         this.rotation = rotation;
         this.origin = origin; //polovičky strán
-        this.firedB = false;
+        //this.firedB = false;
         this.pressedT = 0;
         this.speed = 30;
         this.speedR = 20;
-        this.life = 10;
+        this.maxLife = 10;
+        this.life = this.maxLife;
         
         this.strely = [];
         this.speedS = 8 ;
@@ -21,20 +22,13 @@ class Tank{
     
     update(keyInput, dt){
         this.posun(keyInput, dt);
-        this.pressedT = Date.now();
+        //this.pressedT = Date.now();
 
         if(this.rotation >360) this.rotation = 0;   
-        this.updateShots();            
-        }
-
-    updateShots(){
-        for(var i = 0; i < this.strely.length; i++){       
-            this.strely[i].x += Math.sin(this.strely[i].r * Math.PI / 180)* this.speedS ;
-            this.strely[i].y -= Math.cos(this.strely[i].r* Math.PI / 180)* this.speedS;
-        }
+        this.updateShots();     
     }
 
-
+    
     
 
     draw (){
@@ -45,14 +39,21 @@ class Tank{
         Canvas.context.fillStyle = "rgba(0,0,0,0.3)";
         //Canvas.context.fillRect(-this.origin.x , -this.origin.y, Sprites.tankIMG.width, Sprites.tankIMG.height );// hitbox 
         Canvas.context.restore();
-       // this.drawCollision();
+        //this.drawCollision();
         
     }
-
+    
     shoot(){
         if(this.strely.length < this.maxS){
-
+            
             this.strely.push({x : this.position.x , y : this.position.y , r: this.rotation });
+        }
+    }
+
+    updateShots(){
+        for(var i = 0; i < this.strely.length; i++){       
+            this.strely[i].x += Math.sin(this.strely[i].r * Math.PI / 180)* this.speedS ;
+            this.strely[i].y -= Math.cos(this.strely[i].r* Math.PI / 180)* this.speedS;
         }
     }
 
@@ -127,9 +128,77 @@ class Tank{
             }
     }
 
+    reset(position){
+        this.rotation = 0;
+        this.life = this.maxLife;
+        this.position.x = position;
+    }
+
 }
 
 
+
+class Tank2 extends Tank{
+    constructor(position, rotation, origin){
+        super(position, rotation, origin);
+        this.maxLife = 10;
+
+    }
+
+    draw (){
+        Canvas.context.save();
+        Canvas.context.translate(this.position.x, this.position.y); //zachovaj poradie!!
+        Canvas.context.rotate(Math.floor(this.rotation)  *Math.PI/180);
+        //Canvas.context.fillRect(-this.origin.x , -this.origin.y, Sprites.tankIMG.width, Sprites.tankIMG.height );// hitbox 
+        Canvas.context.drawImage(Sprites.tank2IMG, -this.origin.x , -this.origin.y ); 
+        Canvas.context.restore();
+        //this.drawCollision();
+        
+    }
+
+    
+
+    posun (keyInput, dt){
+
+        if( (Date.now() - this.pressedT  > 15)){
+
+            if(keyInput[65] == 1) { 
+                this.rotationOld = this.rotation;
+                this.positionOld.x =  this.position.x;
+                this.positionOld.y =  this.position.y;
+
+                this.rotation -= this.speedR * dt;
+            }
+            if(keyInput[68] == 1) {
+                this.rotationOld = this.rotation;
+                this.positionOld.x =  this.position.x;
+                this.positionOld.y =  this.position.y;
+
+                this.rotation += this.speedR * dt;
+            } 
+            if(keyInput[87] == 1){
+                this.rotationOld = this.rotation;
+                this.positionOld.x =  this.position.x;
+                this.positionOld.y =  this.position.y;
+
+                this.position.x += Math.sin(this.rotation * Math.PI / 180)* this.speed * dt ;
+                this.position.y -= Math.cos(this.rotation* Math.PI / 180)* this.speed * dt;
+            }
+            if(keyInput[83] == 1){
+                this.rotationOld = this.rotation;
+                this.positionOld.x =  this.position.x;
+                this.positionOld.y =  this.position.y;
+
+                this.position.x -= Math.sin(this.rotation * Math.PI / 180)* this.speed * dt;
+                this.position.y += Math.cos(this.rotation* Math.PI / 180)* this.speed * dt;
+            } 
+            if(keyInput[81] == 1){
+                this.shoot();
+                keyInput[81] = 0;
+            }
+        } 
+    }
+}
 
 
 
