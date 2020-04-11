@@ -1,4 +1,5 @@
 let Sprites = {};
+let Sounds = {};
 let Notloaded_assets = 0;
 
 function AssetsLoading_loop(callback){
@@ -22,6 +23,7 @@ function loadAssets(callback){
 
         return img;
     }
+   
 
     Sprites.background = loadIMG("Obrazky/", "Background_ingame.png");
     Sprites.tankIMG = loadIMG("Obrazky/", "tank_brown.png");
@@ -33,7 +35,9 @@ function loadAssets(callback){
     Sprites.soundON = loadIMG("Obrazky/", "Sound_icon.png");
     Sprites.soundOFF = loadIMG("Obrazky/", "Sound_iconOFF.png");
     Sprites.instrukcie = loadIMG("Obrazky/", "Instrukcie.png");
-
+    
+    Sounds.ingameMusic = document.getElementById("inGameSong");
+    Sounds.ingameMusic.loop = true;
 
     AssetsLoading_loop(callback);
 }

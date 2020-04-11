@@ -54,8 +54,12 @@ class Sound extends Button{
     }
 
     action(){
-        if(this.soundON == 1) this.soundON = 0;
-        else this.soundON = 1;
+        if(this.soundON == 1) {
+            this.soundON = 0;
+        }
+        else {
+            this.soundON = 1;
+        }
     }
 
 }

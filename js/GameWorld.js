@@ -8,6 +8,16 @@ class Gameworld{
         this.healthBar = new HealthBar({x:300, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P1 health");
         this.healthBar2 = new HealthBar({x:700, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P2 health");
         this.buttonSound = new Sound({x: 1100, y: 650},{x: 64, y: 64});
+        this.buttonSound.action = ()=>{
+            if(this.buttonSound.soundON == 1) {
+                this.buttonSound.soundON = 0;
+                Sounds.ingameMusic.pause();
+            }
+            else {
+                this.buttonSound.soundON = 1;
+                Sounds.ingameMusic.play();
+            }
+        }
     
         this.restartButton = new Button({x: 600, y: 330}, {x: 170, y: 50}, "Restart","white","black","20px Arial");
         this.restartButton.action = () => {
@@ -19,6 +29,7 @@ class Gameworld{
         this.menuButton = new Button({x: 420, y: 330}, {x: 170, y: 50}, "Menu","white","black","20px Arial");
         this.menuButton.action = ()=>{
             flag = 0;
+            Sounds.ingameMusic.pause();
             this.statesManager.changeState();
         }
 
@@ -34,6 +45,7 @@ class Gameworld{
 
     init(){
         this.restartButton.action();
+        Sounds.ingameMusic.play();
     }
 
                 
