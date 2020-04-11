@@ -1,10 +1,12 @@
 class Instrukcie{
-    constructor(eventHandler){
+    constructor(eventHandler, statesManager){
         this.buttonMenu = new Button({x: 50, y: 620},{x: 150, y: 60}, "Menu", "white", "black","40px Arial");
-        this.buttonMenu.action = function(){
+        this.buttonMenu.action = ()=>{
             flag = 0;
+            this.statesManager.changeState();   
         }
         this.buttonSound = new Sound({x: 1100, y: 620},{x: 64, y: 64});
+        this.statesManager = statesManager;
         this.eventHandler = eventHandler;
     }
 

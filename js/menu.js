@@ -1,15 +1,18 @@
 class Menu{
-    constructor(eventHandler){
+    constructor(eventHandler, statesManager){
         this.button1 = new Button({x: 408, y: 200}, {x: 400, y: 80}, "Spustiť hru","white","black","40px Arial");
-        this.button1.action = function(){
+        this.button1.action = ()=>{            
             flag = 1;
+            this.statesManager.changeState();
         }
         this.button2 = new Button({x: 408, y: 350},{x: 400, y: 80}, "Inštrukcie","white","black" ,"40px Arial");
-        this.button2.action = function(){
+        this.button2.action = ()=>{
             flag = 2;
+            this.statesManager.changeState();
         }
         this.buttonSound = new Sound({x: 1100, y: 620},{x: 64, y: 64});
         this.eventHandler = eventHandler;
+        this.statesManager = statesManager;
         
         
     }

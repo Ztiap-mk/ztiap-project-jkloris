@@ -128,12 +128,10 @@ class Tank{
             }
     }
 
-    reset(positionX, positionY){
+    reset(position){
         this.rotation = 0;
         this.life = this.maxLife;
-        this.position.x = positionX;
-        this.position.y = positionY;
-
+        this.position = position;
     }
 
 }

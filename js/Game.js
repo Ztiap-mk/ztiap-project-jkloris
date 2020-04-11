@@ -19,7 +19,7 @@ class Game{
         Canvas.clear();
         TankTrouble.StateManager.update();
         TankTrouble.StateManager.draw();        
-        requestAnimationFrame(()=>TankTrouble.mainLoop()); //spýtať sa aký je rozdiel ked tam nieje lambda func
+        requestAnimationFrame(()=>TankTrouble.mainLoop()); 
     }
 }
 

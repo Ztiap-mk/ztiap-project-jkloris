@@ -14,15 +14,15 @@ class stateManager{
         this.input_init();
         this.states = {
         
-            GameWorld : new Gameworld(this.eventHandler),
-            mainMenu  : new Menu(this.eventHandler),
-            instrukcie : new Instrukcie(this.eventHandler),
+            GameWorld : new Gameworld(this.eventHandler, this),
+            mainMenu  : new Menu(this.eventHandler, this),
+            instrukcie : new Instrukcie(this.eventHandler, this),
         };
         this.currentState = this.states.mainMenu;
     }
 
     update(){
-        this.changeState();
+       // this.changeState();
         this.currentState.update();
         //console.log(this.eventHandler.mouseY);  
     }
@@ -32,7 +32,7 @@ class stateManager{
     }
 
     changeState(){
-        if(flag == 0) this.currentState = this.states.mainMenu;
+        if(flag == 0) this.currentState = this.states.mainMenu;  //mozno pridat do konstanty string
         if(flag == 1) this.currentState = this.states.GameWorld;
         if(flag == 2) this.currentState = this.states.instrukcie;
         this.currentState.init();
@@ -111,7 +111,7 @@ class stateManager{
         document.addEventListener("click",(e)=>{
             this.eventHandler.mouseX = e.clientX;
             this.eventHandler.mouseY = e.clientY; 
-            console.log(this.eventHandler.mouseX);
+            //console.log(this.eventHandler.mouseX);
         })
     }
 
