@@ -33,7 +33,8 @@ class Button{
         Canvas.context.fillText(this.name, this.position.x + b, this.position.y+a);
         Canvas.context.restore();
     }
-    
+
+
 }
 
 class Sound extends Button{
@@ -56,6 +57,9 @@ class Sound extends Button{
     action(){
         if(this.soundON == 1) {
             this.soundON = 0;
+            Sounds.forEach(element => {
+                Sounds.element.muted = true;
+            });
         }
         else {
             this.soundON = 1;

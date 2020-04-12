@@ -2,6 +2,7 @@ class Instrukcie{
     constructor(eventHandler, statesManager){
         this.buttonMenu = new Button({x: 50, y: 620},{x: 150, y: 60}, "Menu", "white", "black","40px Arial");
         this.buttonMenu.action = ()=>{
+            Sounds.klik.play();
             flag = 0;
             this.statesManager.changeState();   
         }

@@ -1,12 +1,14 @@
 class Menu{
     constructor(eventHandler, statesManager){
         this.button1 = new Button({x: 408, y: 200}, {x: 400, y: 80}, "Spustiť hru","white","black","40px Arial");
-        this.button1.action = ()=>{            
+        this.button1.action = ()=>{      
+            Sounds.klik.play();      
             flag = 1;
             this.statesManager.changeState();
         }
         this.button2 = new Button({x: 408, y: 350},{x: 400, y: 80}, "Inštrukcie","white","black" ,"40px Arial");
         this.button2.action = ()=>{
+            Sounds.klik.play();
             flag = 2;
             this.statesManager.changeState();
         }
@@ -18,7 +20,7 @@ class Menu{
     }
     
     init(){
-        
+
     }
     
     
