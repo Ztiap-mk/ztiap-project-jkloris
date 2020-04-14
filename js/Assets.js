@@ -1,5 +1,5 @@
 let Sprites = {};
-let Sounds = [];
+let Sounds = {};
 let Notloaded_assets = 0;
 
 function AssetsLoading_loop(callback){

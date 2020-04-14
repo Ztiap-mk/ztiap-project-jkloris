@@ -6,7 +6,6 @@ class Instrukcie{
             flag = 0;
             this.statesManager.changeState();   
         }
-        this.buttonSound = new Sound({x: 1100, y: 620},{x: 64, y: 64});
         this.statesManager = statesManager;
         this.eventHandler = eventHandler;
     }
@@ -16,7 +15,6 @@ class Instrukcie{
     }
 
     update(){
-        this.buttonSound.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
         this.buttonMenu.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
         this.eventHandler.mouseY = -1;
         this.eventHandler.mouseX = -1;
@@ -24,7 +22,6 @@ class Instrukcie{
 
     draw(){
         this.drawBackground();
-        this.buttonSound.draw();
         this.buttonMenu.draw();
 
     }

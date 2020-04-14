@@ -19,16 +19,17 @@ class stateManager{
             instrukcie : new Instrukcie(this.eventHandler, this),
         };
         this.currentState = this.states.mainMenu;
+        this.buttonSound = new Sound({x: 1100, y: 650},{x: 64, y: 64});
     }
 
     update(){
-       // this.changeState();
+        this.buttonSound.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
         this.currentState.update();
-        //console.log(this.eventHandler.mouseY);  
     }
 
     draw(){
         this.currentState.draw();    
+        this.buttonSound.draw();
     }
 
     changeState(){
@@ -111,7 +112,7 @@ class stateManager{
         document.addEventListener("click",(e)=>{
             this.eventHandler.mouseX = e.clientX;
             this.eventHandler.mouseY = e.clientY; 
-            //console.log(this.eventHandler.mouseX);
+            console.log(this.eventHandler.mouseX);
         })
     }
 

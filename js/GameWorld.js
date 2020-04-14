@@ -7,17 +7,7 @@ class Gameworld{
         this.gameBar = new GameBar({x:0, y : 10*64}, {x : 1216, y : 100 }, "rgb(224, 224, 184)");    
         this.healthBar = new HealthBar({x:300, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P1 health");
         this.healthBar2 = new HealthBar({x:700, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P2 health");
-        this.buttonSound = new Sound({x: 1100, y: 650},{x: 64, y: 64});
-        this.buttonSound.action = ()=>{
-            if(this.buttonSound.soundON == 1) {
-                this.buttonSound.soundON = 0;
-                Sounds.ingameMusic.pause();
-            }
-            else {
-                this.buttonSound.soundON = 1;
-                Sounds.ingameMusic.play();
-            }
-        }
+    
     
         this.restartButton = new Button({x: 600, y: 330}, {x: 170, y: 50}, "Restart","white","black","20px Arial");
         this.restartButton.action = () => {
@@ -59,7 +49,6 @@ class Gameworld{
             this.time = Date.now();
             
             //this.input();
-            this.buttonSound.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
             this.tank.update(this.eventHandler.keyInput, this.dt);     
             this.tank2.update(this.eventHandler.keyInput, this.dt);
             this.CollisionCheck_Shot(this.tank.strely, this.tank2);
@@ -100,7 +89,7 @@ class Gameworld{
         this.gameBar.drawBar();
         this.healthBar.drawBar(this.tank.life, this.tank.maxLife);
         this.healthBar2.drawBar(this.tank2.life, this.tank2.maxLife);
-        this.buttonSound.draw();
+        
         this.drawScore();
 
         if(this.vybuch.counter > 0){
