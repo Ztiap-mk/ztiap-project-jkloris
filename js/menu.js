@@ -19,7 +19,7 @@ class Menu{
     }
     
     init(){
-
+        Sounds.ingameMusic.pause();
     }
     
     
