@@ -1,8 +1,8 @@
 class Gameworld{
     constructor(eventHandler, statesManager){
-        this.tank = new Tank({x: 100, y: 100}, 0 , {x: 25, y: 50});
-        this.tank2 = new Tank2({x:1100,y:500}, 0 , {x: 25, y: 50})
         this.mapa1 = new Mapa();
+        this.tank = new Tank({x: 100, y: 100}, 0 , {x: 25, y: 50});
+        this.tank2 = new Tank2({x:1100,y:500}, 0 , {x: 25, y: 50});
         this.vybuch = new Explosion();
         this.gameBar = new GameBar({x:0, y : 10*64}, {x : 1216, y : 100 }, "rgb(224, 224, 184)");    
         this.healthBar = new HealthBar({x:350, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P1 health");
@@ -28,7 +28,7 @@ class Gameworld{
 
         this.time = Date.now();
         this.startTime = Date.now();
-        this.limit  = 30;
+        this.limit  = 60;
         this.dt = 0;
         this.timeBuff = 0;
 
@@ -42,7 +42,7 @@ class Gameworld{
     init(){
         this.paused = false;
         this.startTime = Date.now();
-        this.limit  = 30;   
+        this.limit  = 60;   
         this.restartButton.action();
         this.tank.score = 0;
         this.tank2.score = 0;
@@ -57,7 +57,7 @@ class Gameworld{
         this.time = Date.now(); 
         if(!this.paused){
 
-            this.limit  = (30 - Math.floor((this.time - this.startTime)/1000));
+            this.limit  = (60 - Math.floor((this.time - this.startTime)/1000));
             if(this.limit <= 0) this.gameOver();
             
             this.tank.update(this.eventHandler.keyInput, this.dt);     
@@ -262,7 +262,94 @@ Score = {};
 class Singleplayer extends Gameworld{
     constructor(eventHandler, statesManager){
         super(eventHandler,statesManager);
+        this.mapa1 = new Mapa();
+        this.tank2 = new Tank_AI({x:1100,y:500}, 0 , {x: 25, y: 50},this.mapa1);
+        this.tank = new Tank({x: 100, y: 100}, 0 , {x: 25, y: 50});
+        this.vybuch = new Explosion();
+        this.gameBar = new GameBar({x:0, y : 10*64}, {x : 1216, y : 100 }, "rgb(224, 224, 184)");    
+        this.healthBar = new HealthBar({x:350, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P1 health");
+        this.healthBar2 = new HealthBar({x:650, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P2 health");
+        this.Timer = new Timer({x:20, y : 10*64+20}, {x : 100, y : 50 }, "black");
+        this.zasobnik = new Zasobnik({x:150, y : 10*64 + 10 }, {x : 102, y : 40 }, "white");
+        this.zasobnik2 = new Zasobnik({x:950, y : 10*64 + 10 }, {x : 102, y : 40 }, "white");
+    
+    
+        this.restartButton = new Button({x: 600, y: 330}, {x: 170, y: 50}, "Restart level","white","black","20px Arial");
+        this.restartButton.action = () => {
+            this.tank.reset({x:150,y:150});
+            this.tank2.reset({x:1100,y:500});
+            this.eventHandler.keyInput[80] = 0;
+          
+        }
+
+        this.menuButton = new Button({x: 420, y: 330}, {x: 170, y: 50}, "Menu","white","black","20px Arial");
+        this.menuButton.action = ()=>{
+            flag = 0;
+            this.statesManager.changeState();
+        }
+
+        this.time = Date.now();
+        this.startTime = Date.now();
+        this.limit  = 60;
+        this.dt = 0;
+        this.timeBuff = 0;
+
+        this.eventHandler = eventHandler;
+        this.statesManager = statesManager;
+        this.paused = false;
 
         
+    
+
+    }
+
+    init(){
+        this.paused = false;
+        this.startTime = Date.now();
+        this.limit  = 60;   
+        this.restartButton.action();
+        this.tank.score = 0;
+        this.tank2.score = 0;
+        this.mapa1.level = 3;
+        Sounds.ingameMusic.currentTime =0;
+        Sounds.ingameMusic.play();
+    }
+
+    update(){
+        this.dt = ( Date.now()- this.time ) / 100;
+        this.time = Date.now(); 
+        if(!this.paused){
+
+            this.limit  = (60 - Math.floor((this.time - this.startTime)/1000));
+            if(this.limit <= 0) this.gameOver();
+            console.log(this.mapa1);
+            this.tank.update(this.eventHandler.keyInput, this.dt);     
+            this.tank2.update(this.eventHandler.keyInput, this.dt);
+            this.CollisionCheck_Shot(this.tank.strely, this.tank2);
+            this.CollisionCheck_Shot(this.tank2.strely, this.tank);
+            
+            if(this.CollisionCheck_Tank(this.tank) == 0 ){
+                this.tank.position.x = this.tank.positionOld.x;
+                this.tank.position.y = this.tank.positionOld.y;
+                
+            this.tank.rotation = this.tank.rotationOld;
+           }
+            // if(this.CollisionCheck_Tank(this.tank2) == 0 ){
+            //     this.tank2.position.x = this.tank2.positionOld.x;
+            //     this.tank2.position.y = this.tank2.positionOld.y;
+
+            //     this.tank2.rotation = this.tank2.rotationOld;
+            // }
+
+            this.Death(this.tank);
+            this.Death(this.tank2);
+        } else{
+            this.startTime+=this.dt*100;
+            this.menuButton.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
+            this.restartButton.update(this.eventHandler.mouseX, this.eventHandler.mouseY);
+        }
+        this.pauseGame();
+        this.eventHandler.mouseY = -1;
+        this.eventHandler.mouseX = -1;
     }
 }

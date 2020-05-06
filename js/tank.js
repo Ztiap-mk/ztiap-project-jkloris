@@ -5,7 +5,7 @@ class Tank{
         this.origin = origin; //polovičky strán
         //this.firedB = false;
         this.pressedT = 0;
-        this.speed = 30;
+        this.speed = 20;
         this.speedR = 20;
         this.maxLife = 10;
         this.life = this.maxLife;
@@ -218,6 +218,114 @@ class Tank2 extends Tank{
     }
 }
 
+class Tank_AI extends Tank2{
+    constructor(position, rotation, origin, mapa){
+        super(position, rotation, origin);
+        this.maxLife = 2;
+        this.mapa = mapa;
+        this.smer = { l: 0, r : 0};
+        this.speed = 15;
+
+    }
+    update(keyInput, dt){
+        this.posun(keyInput, dt);
+        //this.pressedT = Date.now();
+        
+        if(this.rotation >360) this.rotation = 0;   
+        this.updateShots(dt);     
+    }
+    draw (){
+        Canvas.context.save();
+        Canvas.context.translate(this.position.x, this.position.y); //zachovaj poradie!!
+        Canvas.context.rotate(Math.floor(this.rotation)  *Math.PI/180);
+        //Canvas.context.fillRect(-this.origin.x , -this.origin.y, Sprites.tankIMG.width, Sprites.tankIMG.height );// hitbox 
+        Canvas.context.drawImage(Sprites.tank2IMG, -this.origin.x , -this.origin.y ); 
+        Canvas.context.restore();
+        //this.drawCollision();
+        this.frontTile();
+        
+    }
+
+    frontTile(){
+        var frontPos = {x: 0, y :0};
+        frontPos.x = this.position.x + Math.sin(this.rotation * Math.PI / 180)* this.speed*1,5  ;
+        frontPos.y = this.position.y - Math.cos(this.rotation* Math.PI / 180)* this.speed*1.5 ;
+        // console.log(frontPos);
+        // console.log(this.position) ;
+        Canvas.context.save();
+        Canvas.context.fillRect(frontPos.x,frontPos.y,5,5);
+        Canvas.context.restore();
+
+        //console.log(this.mapa.MapArray[1][13][12]);
+        //console.log("x = " + Math.floor(frontPos.x / this.mapa.tileSize));
+        //console.log(Math.floor(frontPos.y / this.mapa.tileSize));
+        var rt = {x : frontPos.x +  Math.cos(this.rotation* Math.PI / 180)*this.origin.x + Math.sin(this.rotation* Math.PI / 180)*this.origin.y 
+            , y : frontPos.y + Math.sin(this.rotation* Math.PI / 180)*this.origin.x - Math.cos(this.rotation* Math.PI / 180)*this.origin.y 
+        }
+        var lt = {x : frontPos.x -  Math.cos(this.rotation* Math.PI / 180)*this.origin.x + Math.sin(this.rotation* Math.PI / 180)*this.origin.y 
+            , y : frontPos.y - Math.sin(this.rotation* Math.PI / 180)*this.origin.x - Math.cos(this.rotation* Math.PI / 180)*this.origin.y 
+        }
+        
+        if(lt.x<0) lt.x = 0;
+        if(lt.y<0) lt.y = 0;
+        if(rt.x<0) rt.x = 0;
+        if(rt.y<0) rt.y = 0;
+        if(lt.x>this.mapa.mapSize.x*this.mapa.tileSize) lt.x = this.mapa.mapSize.x*this.mapa.tileSize - 5;
+        if(lt.y>this.mapa.mapSize.y*this.mapa.tileSize) lt.y = this.mapa.mapSize.y*this.mapa.tileSize - 5;
+        if(rt.y>this.mapa.mapSize.y*this.mapa.tileSize) rt.y = this.mapa.mapSize.y*this.mapa.tileSize - 5;
+        if(rt.x>this.mapa.mapSize.x*this.mapa.tileSize) rt.x = this.mapa.mapSize.x*this.mapa.tileSize - 5;
+
+        Canvas.context.fillRect(rt.x, rt.y, 2, 2 );
+        Canvas.context.fillRect(lt.x, lt.y, 2, 2 );
+        //console.log(this.mapa.MapArray[0][Math.floor(frontPos.y / this.mapa.tileSize)][Math.floor(frontPos.x / this.mapa.tileSize)]);
+        this.smer = {
+            l: this.mapa.MapArray[this.mapa.level][Math.floor(lt.y / this.mapa.tileSize)][Math.floor(lt.x / this.mapa.tileSize)],
+            r: this.mapa.MapArray[this.mapa.level][Math.floor(rt.y / this.mapa.tileSize)][Math.floor(rt.x / this.mapa.tileSize)]
+        };
+
+        console.log(this.smer);
+    }
+
+    posun(keyInput, dt){
+        if(this.smer.r == 1 ) { 
+            this.rotationOld = this.rotation;
+            this.positionOld.x =  this.position.x;
+            this.positionOld.y =  this.position.y;
+
+            this.rotation -= this.speedR * dt;
+        }
+        else if(this.smer.l == 1) {
+            this.rotationOld = this.rotation;
+            this.positionOld.x =  this.position.x;
+            this.positionOld.y =  this.position.y;
+
+            this.rotation += this.speedR * dt;
+        } 
+        if(this.smer.r == 0 || this.smer.l == 0){//dopredu
+            this.rotationOld = this.rotation;
+            this.positionOld.x =  this.position.x;
+            this.positionOld.y =  this.position.y;
+
+            this.position.x += Math.sin(this.rotation * Math.PI / 180)* this.speed * dt ;
+            this.position.y -= Math.cos(this.rotation* Math.PI / 180)* this.speed * dt;
+        }
+        // if(keyInput[83] == 1){
+        //     this.rotationOld = this.rotation;
+        //     this.positionOld.x =  this.position.x;
+        //     this.positionOld.y =  this.position.y;
+
+        //     this.position.x -= Math.sin(this.rotation * Math.PI / 180)* this.speed * dt;
+        //     this.position.y += Math.cos(this.rotation* Math.PI / 180)* this.speed * dt;
+        // } 
+        if(keyInput[81] == 1){
+            this.shoot();
+            Sounds.shot.currentTime = 0;
+            Sounds.shot.play();
+            keyInput[81] = 0;
+        }
+    }
+
+}
 
 
 
