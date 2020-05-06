@@ -12,8 +12,10 @@ class Tank{
         this.score = 0;
         
         this.strely = [];
+        this.strelyCounter = 0;
         this.speedS = 8 ;
         this.maxS = 5;
+        this.reload = 0;
 
         this.positionOld = {x : 0, y : 0};
         this.rotationOld = 0;
@@ -26,7 +28,7 @@ class Tank{
         //this.pressedT = Date.now();
 
         if(this.rotation >360) this.rotation = 0;   
-        this.updateShots();     
+        this.updateShots(dt);     
     }
 
     
@@ -45,16 +47,25 @@ class Tank{
     }
     
     shoot(){
-        if(this.strely.length < this.maxS){
+        if(this.strelyCounter < this.maxS){
             
             this.strely.push({x : this.position.x , y : this.position.y , r: this.rotation });
+            this.strelyCounter++;
         }
     }
 
-    updateShots(){
+    updateShots(dt){
         for(var i = 0; i < this.strely.length; i++){       
             this.strely[i].x += Math.sin(this.strely[i].r * Math.PI / 180)* this.speedS ;
             this.strely[i].y -= Math.cos(this.strely[i].r* Math.PI / 180)* this.speedS;
+        }
+        if(this.strelyCounter >= this.maxS  ){
+            this.reload += dt ;
+            if (this.reload > 50){
+                this.strelyCounter = 0;
+            }
+        }else{
+            this.reload = 0
         }
     }
 
@@ -136,6 +147,7 @@ class Tank{
         this.life = this.maxLife;
         this.position = position;
         this.strely = [];
+        this.strelyCounter = 0;
     }
 
 }

@@ -5,9 +5,11 @@ class Gameworld{
         this.mapa1 = new Mapa();
         this.vybuch = new Explosion();
         this.gameBar = new GameBar({x:0, y : 10*64}, {x : 1216, y : 100 }, "rgb(224, 224, 184)");    
-        this.healthBar = new HealthBar({x:300, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P1 health");
-        this.healthBar2 = new HealthBar({x:700, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P2 health");
+        this.healthBar = new HealthBar({x:350, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P1 health");
+        this.healthBar2 = new HealthBar({x:650, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P2 health");
         this.Timer = new Timer({x:20, y : 10*64+20}, {x : 100, y : 50 }, "black");
+        this.zasobnik = new Zasobnik({x:150, y : 10*64 + 10 }, {x : 102, y : 40 }, "white");
+        this.zasobnik2 = new Zasobnik({x:950, y : 10*64 + 10 }, {x : 102, y : 40 }, "white");
     
     
         this.restartButton = new Button({x: 600, y: 330}, {x: 170, y: 50}, "Restart level","white","black","20px Arial");
@@ -99,7 +101,8 @@ class Gameworld{
         this.healthBar.drawBar(this.tank.life, this.tank.maxLife);
         this.healthBar2.drawBar(this.tank2.life, this.tank2.maxLife);
         this.Timer.drawBar(this.limit);
-        
+        this.zasobnik.drawBar(this.tank.strelyCounter, this.tank.maxS);
+        this.zasobnik2.drawBar(this.tank2.strelyCounter, this.tank2.maxS);
         this.drawScore();
 
         if(this.vybuch.counter > 0){
@@ -241,8 +244,8 @@ class Gameworld{
     drawScore(){
         Canvas.context.save();
         Canvas.context.fillStyle = "black";
-        Canvas.context.fillText(this.tank2.score, 250,700);
-        Canvas.context.fillText(this.tank.score, 950,700);
+        Canvas.context.fillText(this.tank2.score, 310,700);
+        Canvas.context.fillText(this.tank.score, 890,700);
         Canvas.context.restore();
     }
 
@@ -255,3 +258,11 @@ class Gameworld{
 }
 
 Score = {};
+
+class Singleplayer extends Gameworld{
+    constructor(eventHandler, statesManager){
+        super(eventHandler,statesManager);
+
+        
+    }
+}
