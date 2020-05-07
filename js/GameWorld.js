@@ -113,7 +113,7 @@ class Gameworld{
             this.drawPause();
         }
 
-        }
+    }
 
     CollisionCheck_Shot(pole, tank){
         if(pole.length > 0){
@@ -263,8 +263,8 @@ class Singleplayer extends Gameworld{
     constructor(eventHandler, statesManager){
         super(eventHandler,statesManager);
         this.mapa1 = new Mapa();
-        this.tank2 = new Tank_AI({x:1100,y:500}, 0 , {x: 25, y: 50},this.mapa1);
         this.tank = new Tank({x: 100, y: 100}, 0 , {x: 25, y: 50});
+        this.tank2 = new Tank_AI({x:1100,y:500}, 0 , {x: 25, y: 50},this.mapa1);
         this.vybuch = new Explosion();
         this.gameBar = new GameBar({x:0, y : 10*64}, {x : 1216, y : 100 }, "rgb(224, 224, 184)");    
         this.healthBar = new HealthBar({x:350, y : 10*64 + 10 }, {x : 200, y : 40 }, "red", "P1 health");
@@ -304,6 +304,7 @@ class Singleplayer extends Gameworld{
     }
 
     init(){
+        this.time = Date.now();
         this.paused = false;
         this.startTime = Date.now();
         this.limit  = 60;   
@@ -322,9 +323,9 @@ class Singleplayer extends Gameworld{
 
             this.limit  = (60 - Math.floor((this.time - this.startTime)/1000));
             if(this.limit <= 0) this.gameOver();
-            console.log(this.mapa1);
             this.tank.update(this.eventHandler.keyInput, this.dt);     
-            this.tank2.update(this.eventHandler.keyInput, this.dt);
+            this.tank2.update(this.eventHandler.keyInput, this.dt, this.tank.position);
+            console.log(this.tank2);
             this.CollisionCheck_Shot(this.tank.strely, this.tank2);
             this.CollisionCheck_Shot(this.tank2.strely, this.tank);
             
@@ -334,12 +335,12 @@ class Singleplayer extends Gameworld{
                 
             this.tank.rotation = this.tank.rotationOld;
            }
-            // if(this.CollisionCheck_Tank(this.tank2) == 0 ){
-            //     this.tank2.position.x = this.tank2.positionOld.x;
-            //     this.tank2.position.y = this.tank2.positionOld.y;
+            if(this.CollisionCheck_Tank(this.tank2) == 0 && this.tank2.mod == 2 ){
+                this.tank2.position.x = this.tank2.positionOld.x;
+                this.tank2.position.y = this.tank2.positionOld.y;
 
-            //     this.tank2.rotation = this.tank2.rotationOld;
-            // }
+                this.tank2.rotation = this.tank2.rotationOld;
+            }
 
             this.Death(this.tank);
             this.Death(this.tank2);
@@ -352,4 +353,29 @@ class Singleplayer extends Gameworld{
         this.eventHandler.mouseY = -1;
         this.eventHandler.mouseX = -1;
     }
+
+    draw(){
+        Canvas.drawImage(Sprites.background, {x : 0, y : 0});
+        this.mapa1.drawMap();
+        this.tank.drawShots();
+        this.tank2.drawShots();
+        this.tank.draw(); 
+        this.tank2.draw();
+        this.gameBar.drawBar();
+        this.healthBar.drawBar(this.tank.life, this.tank.maxLife);
+        this.healthBar2.drawBar(this.tank2.life, this.tank2.maxLife);
+        this.Timer.drawBar(this.limit);
+        this.zasobnik.drawBar(this.tank.strelyCounter, this.tank.maxS);
+        //this.zasobnik2.drawBar(this.tank2.strelyCounter, this.tank2.maxS);
+        this.drawScore();
+
+        if(this.vybuch.counter > 0){
+            this.vybuch.drawExplosion(this.vybuch.position, Math.floor(this.vybuch.counter / 3)*0.25);
+            this.vybuch.counter--;
+        }
+        if(this.paused){
+            this.drawPause();
+        }
+
+        }
 }

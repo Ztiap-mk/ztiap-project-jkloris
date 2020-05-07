@@ -48,7 +48,8 @@ class Tank{
     
     shoot(){
         if(this.strelyCounter < this.maxS){
-            
+            Sounds.shot.currentTime = 0;
+            Sounds.shot.play();
             this.strely.push({x : this.position.x , y : this.position.y , r: this.rotation });
             this.strelyCounter++;
         }
@@ -136,8 +137,7 @@ class Tank{
             } 
             if(keyInput[77] == 1){
                 this.shoot();
-                Sounds.shot.currentTime = 0;
-                Sounds.shot.play();
+                
                 keyInput[77] = 0;
             }
     }
@@ -210,8 +210,6 @@ class Tank2 extends Tank{
             } 
             if(keyInput[81] == 1){
                 this.shoot();
-                Sounds.shot.currentTime = 0;
-                Sounds.shot.play();
                 keyInput[81] = 0;
             }
         } 
@@ -221,19 +219,26 @@ class Tank2 extends Tank{
 class Tank_AI extends Tank2{
     constructor(position, rotation, origin, mapa){
         super(position, rotation, origin);
-        this.maxLife = 2;
+        this.maxLife = 10;
         this.mapa = mapa;
         this.smer = { l: 0, r : 0};
-        this.speed = 15;
-
+        this.speed = 20;
+        this.mod = -1;
+        this.HitAngle = 0;
+        this.shotT = 0;
+        this.maxS = 10;
     }
-    update(keyInput, dt){
+    update(keyInput, dt, pos){
+        this.getMod(pos)
         this.posun(keyInput, dt);
         //this.pressedT = Date.now();
         
-        if(this.rotation >360) this.rotation = 0;   
-        this.updateShots(dt);     
+        if(this.rotation >360 ) this.rotation = 0;   
+        if(this.rotation < 0) this.rotation = 360;
+        this.updateShots(dt);      
     }
+
+
     draw (){
         Canvas.context.save();
         Canvas.context.translate(this.position.x, this.position.y); //zachovaj poradie!!
@@ -250,15 +255,12 @@ class Tank_AI extends Tank2{
         var frontPos = {x: 0, y :0};
         frontPos.x = this.position.x + Math.sin(this.rotation * Math.PI / 180)* this.speed*1,5  ;
         frontPos.y = this.position.y - Math.cos(this.rotation* Math.PI / 180)* this.speed*1.5 ;
-        // console.log(frontPos);
-        // console.log(this.position) ;
-        Canvas.context.save();
-        Canvas.context.fillRect(frontPos.x,frontPos.y,5,5);
-        Canvas.context.restore();
+       
+        // Canvas.context.save();
+        // Canvas.context.fillRect(frontPos.x,frontPos.y,5,5);
+        // Canvas.context.restore();
 
-        //console.log(this.mapa.MapArray[1][13][12]);
-        //console.log("x = " + Math.floor(frontPos.x / this.mapa.tileSize));
-        //console.log(Math.floor(frontPos.y / this.mapa.tileSize));
+        
         var rt = {x : frontPos.x +  Math.cos(this.rotation* Math.PI / 180)*this.origin.x + Math.sin(this.rotation* Math.PI / 180)*this.origin.y 
             , y : frontPos.y + Math.sin(this.rotation* Math.PI / 180)*this.origin.x - Math.cos(this.rotation* Math.PI / 180)*this.origin.y 
         }
@@ -275,54 +277,113 @@ class Tank_AI extends Tank2{
         if(rt.y>this.mapa.mapSize.y*this.mapa.tileSize) rt.y = this.mapa.mapSize.y*this.mapa.tileSize - 5;
         if(rt.x>this.mapa.mapSize.x*this.mapa.tileSize) rt.x = this.mapa.mapSize.x*this.mapa.tileSize - 5;
 
-        Canvas.context.fillRect(rt.x, rt.y, 2, 2 );
-        Canvas.context.fillRect(lt.x, lt.y, 2, 2 );
+        // Canvas.context.fillRect(rt.x, rt.y, 2, 2 );
+        // Canvas.context.fillRect(lt.x, lt.y, 2, 2 );
         //console.log(this.mapa.MapArray[0][Math.floor(frontPos.y / this.mapa.tileSize)][Math.floor(frontPos.x / this.mapa.tileSize)]);
         this.smer = {
             l: this.mapa.MapArray[this.mapa.level][Math.floor(lt.y / this.mapa.tileSize)][Math.floor(lt.x / this.mapa.tileSize)],
             r: this.mapa.MapArray[this.mapa.level][Math.floor(rt.y / this.mapa.tileSize)][Math.floor(rt.x / this.mapa.tileSize)]
         };
 
-        console.log(this.smer);
+        //console.log(this.smer);
+    }
+
+    getMod(pos){
+        var vzdialenost = Math.sqrt(Math.pow(this.position.x - pos.x, 2) + Math.pow(this.position.y - pos.y,2));
+        var pom_vzdialenost = Math.sqrt(Math.pow(this.position.x - pos.x, 2) + Math.pow(pos.y,2));
+        // console.log(pom_vzdialenost);
+        this.HitAngle = Math.acos((Math.pow(pom_vzdialenost,2)-Math.pow(vzdialenost,2)-Math.pow(this.position.y,2))/(-2*this.position.y*vzdialenost))/Math.PI*180;
+        if(this.position.x > pos.x) this.HitAngle=360-this.HitAngle;
+
+        if(vzdialenost < 300){
+            this.mod = 1;
+            console.log("hit" + this.HitAngle);
+            console.log(this.rotation);
+           // console.log(Math.abs(this.HitAngle-Math.abs(this.rotation)));
+            //console.log((this.HitAngle-Math.abs(this.rotation)));
+            if( Math.abs(this.HitAngle-Math.abs(this.rotation)) <5   ){
+                this.mod = 2;
+            }
+
+        } else{
+            this.mod = 0;   
+        }
+        
     }
 
     posun(keyInput, dt){
-        if(this.smer.r == 1 ) { 
-            this.rotationOld = this.rotation;
-            this.positionOld.x =  this.position.x;
-            this.positionOld.y =  this.position.y;
+        this.shotT += dt;
+        if(this.mod == 0){
 
+            if(this.smer.r == 1 ) { 
+                this.rotationOld = this.rotation;
+                this.positionOld.x =  this.position.x;
+            this.positionOld.y =  this.position.y;
+            
             this.rotation -= this.speedR * dt;
-        }
-        else if(this.smer.l == 1) {
-            this.rotationOld = this.rotation;
-            this.positionOld.x =  this.position.x;
-            this.positionOld.y =  this.position.y;
+            }
+            else if(this.smer.l == 1) {
+                this.rotationOld = this.rotation;
+                this.positionOld.x =  this.position.x;
+                this.positionOld.y =  this.position.y;
+                
+                this.rotation += this.speedR * dt;
+            } 
+            if(this.smer.r == 0 || this.smer.l == 0){//dopredu
+                this.rotationOld = this.rotation;
+                this.positionOld.x =  this.position.x;
+                this.positionOld.y =  this.position.y;
+                
+                this.position.x += Math.sin(this.rotation * Math.PI / 180)* this.speed * dt ;
+                this.position.y -= Math.cos(this.rotation* Math.PI / 180)* this.speed * dt;
+            }
+        }else if(this.mod == 1){
+            console.log("ddsd" + Math.abs(this.HitAngle - this.rotation));
+            // if(Math.abs(this.HitAngle - this.rotation) < 180){
 
-            this.rotation += this.speedR * dt;
-        } 
-        if(this.smer.r == 0 || this.smer.l == 0){//dopredu
-            this.rotationOld = this.rotation;
-            this.positionOld.x =  this.position.x;
-            this.positionOld.y =  this.position.y;
+            //     this.rotationOld = this.rotation;
+            //     this.positionOld.x =  this.position.x;
+            //     this.positionOld.y =  this.position.y;
+                
+            //     this.rotation += this.speedR * dt;
+            // } else{
+                this.rotationOld = this.rotation;
+                this.positionOld.x =  this.position.x;
+                this.positionOld.y =  this.position.y;
+                
+                this.rotation -= this.speedR * dt;
+           // }
+        } else if(this.mod == 2){
 
-            this.position.x += Math.sin(this.rotation * Math.PI / 180)* this.speed * dt ;
-            this.position.y -= Math.cos(this.rotation* Math.PI / 180)* this.speed * dt;
-        }
-        // if(keyInput[83] == 1){
-        //     this.rotationOld = this.rotation;
-        //     this.positionOld.x =  this.position.x;
-        //     this.positionOld.y =  this.position.y;
+              
+                if(this.shotT > 10){
 
-        //     this.position.x -= Math.sin(this.rotation * Math.PI / 180)* this.speed * dt;
-        //     this.position.y += Math.cos(this.rotation* Math.PI / 180)* this.speed * dt;
-        // } 
-        if(keyInput[81] == 1){
-            this.shoot();
-            Sounds.shot.currentTime = 0;
-            Sounds.shot.play();
-            keyInput[81] = 0;
-        }
+                    this.shoot();
+                  
+                    keyInput[81] = 0;
+                    this.mod = 0;
+                    this.shotT = 0;
+            
+                }else{
+                    this.rotationOld = this.rotation;
+                    this.positionOld.x =  this.position.x;
+                    this.positionOld.y =  this.position.y;
+                
+                    this.position.x -= Math.sin(this.rotation * Math.PI / 180)* this.speed * dt;
+                    this.position.y += Math.cos(this.rotation* Math.PI / 180)* this.speed * dt;
+                }
+        
+            }
+
+    }
+
+    reset(position){
+        this.rotation = 0;
+        this.life = this.maxLife;
+        this.position = position;
+        this.strely = [];
+        this.strelyCounter = 0;
+        this.mod = 0;
     }
 
 }
