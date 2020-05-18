@@ -1,6 +1,7 @@
 class Gameworld{
     constructor(eventHandler, statesManager){
         this.mapa1 = new Mapa();
+        this.mapa_cpy = new Mapa();
         this.tank = new Tank({x: 100, y: 100}, 0 , {x: 25, y: 50});
         this.tank2 = new Tank2({x:1100,y:500}, 0 , {x: 25, y: 50});
         this.vybuch = new Explosion();
@@ -17,6 +18,7 @@ class Gameworld{
             this.tank.reset({x:150,y:150});
             this.tank2.reset({x:1100,y:500});
             this.eventHandler.keyInput[80] = 0;
+            this.resetMap();
           
         }
 
@@ -49,6 +51,7 @@ class Gameworld{
         this.mapa1.level =0;
         Sounds.ingameMusic.currentTime =0;
         Sounds.ingameMusic.play();
+        
     }
 
                 
@@ -115,6 +118,14 @@ class Gameworld{
 
     }
 
+    resetMap(){
+        for(var r= 0; r < this.mapa1.mapSize.y; r++){
+            for(var s = 0; s < this.mapa1.mapSize.x; s++){
+                    this.mapa1.MapArray[this.mapa1.level][r][s]=this.mapa_cpy.MapArray[this.mapa1.level][r][s] ;
+            }
+        }  
+    }
+
     CollisionCheck_Shot(pole, tank){
         if(pole.length > 0){
 
@@ -122,11 +133,16 @@ class Gameworld{
             for(var i = 0; i < pole.length; i++){       
                 pos.Y = Math.floor(pole[i].y  / this.mapa1.tileSize);
                 pos.X = Math.floor(pole[i].x / this.mapa1.tileSize) ;
-                if(this.mapa1.MapArray[this.mapa1.level][pos.Y][pos.X] == 1){
+                if(this.mapa1.MapArray[this.mapa1.level][pos.Y][pos.X] >= 1){
                     this.vybuch.counter = 20;
                     this.vybuch.position = pole[i];                    
                     
                     pole.splice(i,1);
+                    if(pos.Y > 0 && pos.Y < this.mapa1.mapSize.y-1 && pos.X > 0 && pos.X < this.mapa1.mapSize.x-1)
+                        this.mapa1.MapArray[this.mapa1.level][pos.Y][pos.X]++;
+                    if(this.mapa1.MapArray[this.mapa1.level][pos.Y][pos.X]>4 ){
+                        this.mapa1.MapArray[this.mapa1.level][pos.Y][pos.X] = 0;
+                    }
                 
                 } else if(this.hitDetection(tank, pole[i]) == 1){
                     this.vybuch.counter = 20;
@@ -153,10 +169,10 @@ class Gameworld{
                 , y : tank.position.y - Math.sin(tank.rotation* Math.PI / 180)*tank.origin.x + Math.cos(tank.rotation* Math.PI / 180)*tank.origin.y 
             }    
 
-        if( this.mapa1.MapArray[this.mapa1.level][Math.floor(rt.y / this.mapa1.tileSize)][Math.floor(rt.x / this.mapa1.tileSize)] == 1 ||
-            this.mapa1.MapArray[this.mapa1.level][Math.floor(lt.y / this.mapa1.tileSize)][Math.floor(lt.x / this.mapa1.tileSize)] == 1 ||
-            this.mapa1.MapArray[this.mapa1.level][Math.floor(rb.y / this.mapa1.tileSize)][Math.floor(rb.x / this.mapa1.tileSize)] == 1 ||
-            this.mapa1.MapArray[this.mapa1.level][Math.floor(lb.y / this.mapa1.tileSize)][Math.floor(lb.x / this.mapa1.tileSize)] == 1  ){
+        if( this.mapa1.MapArray[this.mapa1.level][Math.floor(rt.y / this.mapa1.tileSize)][Math.floor(rt.x / this.mapa1.tileSize)] >= 1 ||
+            this.mapa1.MapArray[this.mapa1.level][Math.floor(lt.y / this.mapa1.tileSize)][Math.floor(lt.x / this.mapa1.tileSize)] >= 1 ||
+            this.mapa1.MapArray[this.mapa1.level][Math.floor(rb.y / this.mapa1.tileSize)][Math.floor(rb.x / this.mapa1.tileSize)] >= 1 ||
+            this.mapa1.MapArray[this.mapa1.level][Math.floor(lb.y / this.mapa1.tileSize)][Math.floor(lb.x / this.mapa1.tileSize)] >= 1  ){
             
             return 0 ;
             }
@@ -279,6 +295,7 @@ class Singleplayer extends Gameworld{
             this.tank.reset({x:150,y:150});
             this.tank2.reset({x:1100,y:500});
             this.eventHandler.keyInput[80] = 0;
+            this.resetMap();
           
         }
 
@@ -325,7 +342,6 @@ class Singleplayer extends Gameworld{
             if(this.limit <= 0) this.gameOver();
             this.tank.update(this.eventHandler.keyInput, this.dt);     
             this.tank2.update(this.eventHandler.keyInput, this.dt, this.tank.position);
-            console.log(this.tank2);
             this.CollisionCheck_Shot(this.tank.strely, this.tank2);
             this.CollisionCheck_Shot(this.tank2.strely, this.tank);
             

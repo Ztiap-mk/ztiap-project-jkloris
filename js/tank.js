@@ -271,7 +271,7 @@ class Tank_AI extends Tank2{
         if(lt.x<0) lt.x = 0;
         if(lt.y<0) lt.y = 0;
         if(rt.x<0) rt.x = 0;
-        if(rt.y<0) rt.y = 0;
+        if(rt.y<0) rt.y = 0; 
         if(lt.x>this.mapa.mapSize.x*this.mapa.tileSize) lt.x = this.mapa.mapSize.x*this.mapa.tileSize - 5;
         if(lt.y>this.mapa.mapSize.y*this.mapa.tileSize) lt.y = this.mapa.mapSize.y*this.mapa.tileSize - 5;
         if(rt.y>this.mapa.mapSize.y*this.mapa.tileSize) rt.y = this.mapa.mapSize.y*this.mapa.tileSize - 5;
@@ -297,8 +297,8 @@ class Tank_AI extends Tank2{
 
         if(vzdialenost < 300){
             this.mod = 1;
-            console.log("hit" + this.HitAngle);
-            console.log(this.rotation);
+            // console.log("hit" + this.HitAngle);
+            // console.log(this.rotation);
            // console.log(Math.abs(this.HitAngle-Math.abs(this.rotation)));
             //console.log((this.HitAngle-Math.abs(this.rotation)));
             if( Math.abs(this.HitAngle-Math.abs(this.rotation)) <5   ){
@@ -315,14 +315,14 @@ class Tank_AI extends Tank2{
         this.shotT += dt;
         if(this.mod == 0){
 
-            if(this.smer.r == 1 ) { 
+            if(this.smer.r >= 1 ) { 
                 this.rotationOld = this.rotation;
                 this.positionOld.x =  this.position.x;
             this.positionOld.y =  this.position.y;
             
             this.rotation -= this.speedR * dt;
             }
-            else if(this.smer.l == 1) {
+            else if(this.smer.l >= 1) {
                 this.rotationOld = this.rotation;
                 this.positionOld.x =  this.position.x;
                 this.positionOld.y =  this.position.y;
