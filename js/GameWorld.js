@@ -199,7 +199,7 @@ class Gameworld{
             }
 
             if(f == 1 && rt.y > lb.y){
-                console.log(vzdialenost);
+                // console.log(vzdialenost);
                 
                 if((vzdialenost < tank.origin.x) || (rt.y>= raketa.y && lb.y <= raketa.y)){
                     Sounds.vybuch.currentTime = 0;
@@ -208,7 +208,7 @@ class Gameworld{
                     return 1;
                 }
             } else if(f == 1 && rt.y <= lb.y){
-                if((vzdialenost < tank.origin.x / 2) ||(rt.y<= raketa.y && lb.y >= raketa.y)){
+                if((vzdialenost < tank.origin.x) ||(rt.y<= raketa.y && lb.y >= raketa.y)){
                     Sounds.vybuch.currentTime = 0;
                     Sounds.vybuch.play();
                     tank.score+=10;
