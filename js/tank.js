@@ -338,7 +338,7 @@ class Tank_AI extends Tank2{
                 this.position.y -= Math.cos(this.rotation* Math.PI / 180)* this.speed * dt;
             }
         }else if(this.mod == 1){
-            console.log("ddsd" + Math.abs(this.HitAngle - this.rotation));
+            // console.log("ddsd" + Math.abs(this.HitAngle - this.rotation));
             // if(Math.abs(this.HitAngle - this.rotation) < 180){
 
             //     this.rotationOld = this.rotation;
@@ -356,7 +356,7 @@ class Tank_AI extends Tank2{
         } else if(this.mod == 2){
 
               
-                if(this.shotT > 10){
+                if(this.shotT > 5){
 
                     this.shoot();
                   

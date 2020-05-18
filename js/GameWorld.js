@@ -189,6 +189,8 @@ class Gameworld{
             var lb = {x : tank.position.x -  Math.cos(tank.rotation* Math.PI / 180)*tank.origin.x - Math.sin(tank.rotation* Math.PI / 180)*tank.origin.y 
                 , y : tank.position.y - Math.sin(tank.rotation* Math.PI / 180)*tank.origin.x + Math.cos(tank.rotation* Math.PI / 180)*tank.origin.y 
             } 
+            var vzdialenost = Math.sqrt(Math.pow(tank.position.x - raketa.x, 2) + Math.pow(tank.position.y - raketa.y,2));
+            console.log(vzdialenost);
     
             if(rt.x > lb.x) {
                 if(rt.x>= raketa.x && lb.x <= raketa.x)  f= 1;
@@ -197,14 +199,16 @@ class Gameworld{
             }
 
             if(f == 1 && rt.y > lb.y){
-                if(rt.y>= raketa.y && lb.y <= raketa.y){
+                console.log(vzdialenost);
+                
+                if((vzdialenost < tank.origin.x) || (rt.y>= raketa.y && lb.y <= raketa.y)){
                     Sounds.vybuch.currentTime = 0;
                     Sounds.vybuch.play();
                     tank.score+=10;
                     return 1;
                 }
             } else if(f == 1 && rt.y <= lb.y){
-                if(rt.y<= raketa.y && lb.y >= raketa.y){
+                if((vzdialenost < tank.origin.x / 2) ||(rt.y<= raketa.y && lb.y >= raketa.y)){
                     Sounds.vybuch.currentTime = 0;
                     Sounds.vybuch.play();
                     tank.score+=10;
