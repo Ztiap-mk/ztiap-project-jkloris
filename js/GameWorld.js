@@ -11,6 +11,7 @@ class Gameworld{
         this.Timer = new Timer({x:20, y : 10*64+20}, {x : 100, y : 50 }, "black");
         this.zasobnik = new Zasobnik({x:150, y : 10*64 + 10 }, {x : 102, y : 40 }, "white");
         this.zasobnik2 = new Zasobnik({x:950, y : 10*64 + 10 }, {x : 102, y : 40 }, "white");
+        this.healing = new PowerUp(this.mapa1);
         this.timeSet = 100;
     
     
@@ -19,6 +20,7 @@ class Gameworld{
             this.tank.reset({x:150,y:150});
             this.tank2.reset({x:1100,y:500});
             this.eventHandler.keyInput[80] = 0;
+            this.healing.powArray = [];
             this.resetMap();
           
         }
@@ -68,6 +70,7 @@ class Gameworld{
             this.tank2.update(this.eventHandler.keyInput, this.dt);
             this.CollisionCheck_Shot(this.tank.strely, this.tank2);
             this.CollisionCheck_Shot(this.tank2.strely, this.tank);
+            this.healing.update(this.dt, this.mapa1.level,this.tank, this.tank2);
             
             if(this.CollisionCheck_Tank(this.tank) == 0 ){
                 this.tank.position.x = this.tank.positionOld.x;
@@ -97,6 +100,7 @@ class Gameworld{
     draw(){
         Canvas.drawImage(Sprites.background, {x : 0, y : 0});
         this.mapa1.drawMap();
+        this.healing.draw();
         this.tank.drawShots();
         this.tank2.drawShots();
         this.tank.draw(); 
@@ -125,7 +129,6 @@ class Gameworld{
                     this.mapa1.MapArray[this.mapa1.level][r][s]=this.mapa_cpy.MapArray[this.mapa1.level][r][s] ;
             }
         }  
-        console.log("reset ----------------");
     }
 
     CollisionCheck_Shot(pole, tank){
@@ -192,7 +195,7 @@ class Gameworld{
                 , y : tank.position.y - Math.sin(tank.rotation* Math.PI / 180)*tank.origin.x + Math.cos(tank.rotation* Math.PI / 180)*tank.origin.y 
             } 
             var vzdialenost = Math.sqrt(Math.pow(tank.position.x - raketa.x, 2) + Math.pow(tank.position.y - raketa.y,2));
-            console.log(vzdialenost);
+            // console.log(vzdialenost);
     
             if(rt.x > lb.x) {
                 if(rt.x>= raketa.x && lb.x <= raketa.x)  f= 1;
@@ -300,7 +303,7 @@ class Singleplayer extends Gameworld{
         this.restartButton.action = () => {
             this.tank.reset({x:150,y:150});
             this.tank2.reset({x:1100,y:500});
-           
+            this.healing.powArray = [];
             this.eventHandler.keyInput[80] = 0;
             this.resetMap();
           
@@ -374,6 +377,7 @@ class Singleplayer extends Gameworld{
             this.tank2.update(this.eventHandler.keyInput, this.dt, this.tank.position);
             this.CollisionCheck_Shot(this.tank.strely, this.tank2);
             this.CollisionCheck_Shot(this.tank2.strely, this.tank);
+            this.healing.update(this.dt, this.mapa1.level,this.tank, this.tank2);
             
             if(this.CollisionCheck_Tank(this.tank) == 0 ){
                 this.tank.position.x = this.tank.positionOld.x;
@@ -403,6 +407,7 @@ class Singleplayer extends Gameworld{
     draw(){
         Canvas.drawImage(Sprites.background, {x : 0, y : 0});
         this.mapa1.drawMap();
+        this.healing.draw();
         this.tank.drawShots();
         this.tank2.drawShots();
         this.tank.draw(); 

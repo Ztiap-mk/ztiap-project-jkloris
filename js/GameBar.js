@@ -76,3 +76,67 @@ class Zasobnik extends GameBar{
         }
     }
 }
+
+class PowerUp{
+    constructor(mapa){
+        this.mapa1 = mapa;
+        this.timer = 0;
+        this.powArray = [];
+    }
+
+    update(dt, level,tank1, tank2){
+        this.generatePowerup(dt,level);
+        this.usePowerup(tank1, tank2);
+    }
+
+    usePowerup(tank1, tank2){
+        for(var i in this.powArray){
+            // console.log(this.powArray[i].y);
+            // console.log( Math.floor(tank1.position.x / this.mapa1.tileSize));
+            if(this.powArray[i].y == Math.floor(tank1.position.x / this.mapa1.tileSize) && this.powArray[i].x == Math.floor(tank1.position.y / this.mapa1.tileSize) ){
+                this.powArray.splice(i,1);
+                tank1.life+=3;
+                if(tank1.life>tank1.maxLife)
+                    tank1.life=tank1.maxLife;
+            }else if(this.powArray[i].y == Math.floor(tank2.position.x / this.mapa1.tileSize) && this.powArray[i].x == Math.floor(tank2.position.y / this.mapa1.tileSize) ){
+                this.powArray.splice(i,1);
+                tank2.life+=3;
+                if(tank2.life>tank2.maxLife)
+                    tank2.life=tank2.maxLife;
+                
+            }
+        }
+    }
+
+    generatePowerup(dt, level){
+        this.timer += dt;
+        // console.log(this.timer);
+        if(this.timer > 150){
+            this.timer = 0;
+            var posx = Math.floor(Math.random()* (this.mapa1.mapSize.y -2)) + 1;
+            var posy = Math.floor(Math.random()* (this.mapa1.mapSize.x -2)) + 1;
+            
+            
+            // console.log(this.mapa1.MapArray[0][10][2]);
+            while(this.mapa1.MapArray[level][posx][posy]!=0){
+                posx = Math.floor(Math.random()* (this.mapa1.mapSize.y -2)) + 1;
+                posy = Math.floor(Math.random()* (this.mapa1.mapSize.x -2)) + 1;
+            }
+
+            this.powArray.push({x : posx, y : posy});
+            // console.log(this.powArray);
+        }
+            
+    }
+
+
+    draw(){
+        for(var i in this.powArray){
+
+            Canvas.context.save();
+            Canvas.context.translate(this.mapa1.tileSize*this.powArray[i].y, this.mapa1.tileSize*this.powArray[i].x );
+            Canvas.context.drawImage(Sprites.medkit, 0,0);
+            Canvas.context.restore();
+        }
+    }
+}

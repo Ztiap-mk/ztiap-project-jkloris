@@ -73,6 +73,6 @@ class Mapa{
         Canvas.context.restore();
     }
 
-   
+
 
 }
