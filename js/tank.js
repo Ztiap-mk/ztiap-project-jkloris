@@ -227,6 +227,7 @@ class Tank_AI extends Tank2{
         this.HitAngle = 0;
         this.shotT = 0;
         this.maxS = 10;
+        this.reloadS = 10;
     }
     update(keyInput, dt, pos){
         this.getMod(pos)
@@ -356,7 +357,7 @@ class Tank_AI extends Tank2{
         } else if(this.mod == 2){
 
               
-                if(this.shotT > 5){
+                if(this.shotT > this.reloadS){
 
                     this.shoot();
                   
